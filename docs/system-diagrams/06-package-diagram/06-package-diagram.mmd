@@ -1,0 +1,37 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph Frontend["frontend/ Package (React.js + Vite Client)"]
+        direction TB
+        COMP["components/\\nNavbar.jsx · ProtectedRoute.jsx · EmptyState.jsx"]
+        CTX["context/\\nAuthContext.jsx · CartContext.jsx · SocketContext.jsx"]
+        subgraph PAGES["pages/"]
+            direction TB
+            P_AUTH["Login.jsx · Register.jsx"]
+            P_CUST["customer/ (8 Views)\\nReservation · MyReservations · QueueStatus\\nDigitalMenu · MenuItemDetails · Cart\\nOrderConfirmation · OrderStatus"]
+            P_STAFF["staff/ (5 Views)\\nReservationMgmt · ReservationDetails\\nQueueMgmt · TableMgmt · SeatingMgmt"]
+            P_KITCHEN["kitchen/ (3 Views)\\nOrderMgmt · OrderDetails · OrderStatusMgmt"]
+            P_MGMT["management/\\nDashboard.jsx"]
+        end
+        SVC["services/\\napi.js (Axios HTTP Client & Interceptors)"]
+        FE_ENTRY["Client Entry\\nApp.jsx · main.jsx · index.css"]
+    end
+
+    subgraph Backend["backend/ Package (Node.js + Express API Server)"]
+        direction TB
+        CFG["config/\\ndb.js (MySQL Connection Pool)"]
+        MW["middleware/\\nauth.js (JWT Auth & Role Guard)"]
+        ROUTES["routes/ (8 REST Controllers)\\nauth.js · reservations.js · queue.js\\ntables.js · seating.js · menu.js\\norders.js · dashboard.js"]
+        SOCK["socket/\\nindex.js (Real-Time Signal Broker)"]
+        DB["database/\\nschema.sql · seed.js"]
+        BE_ENTRY["Server Entry\\nserver.js · .env"]
+    end
+
+    PAGES -.->|"Imports & Consumes"| CTX
+    PAGES -.->|"Dispatches HTTP"| SVC
+    CTX -.->|"Sets Auth Token"| SVC
+    SVC -->|"REST API (HTTP /api/*)"| ROUTES
+    CTX <.->|"WebSocket Signals"| SOCK
+    ROUTES -->|"Validates JWT & Roles"| MW
+    ROUTES -->|"Executes SQL Queries"| CFG
+    SOCK -->|"Authenticates Handshake"| MW
+    CFG -->|"Defines Tables"| DB

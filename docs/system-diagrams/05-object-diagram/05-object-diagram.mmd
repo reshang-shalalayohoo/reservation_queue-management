@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph Snapshot["Object Diagram Snapshot: Active Seated Order Fulfillment at 19:15"]
+        direction TB
+
+        john["john : User\nid = 1\nname = 'John Customer'\nemail = 'customer@viking.com'\nrole = 'customer'"]
+
+        res1["res1 : Reservation\nid = 5\ncustomer_id = 1\nreservation_date = '2026-10-30'\nreservation_time = '19:00:00'\nguests = 4\ntable_preference = 'main'\ntable_id = 3\nstatus = 'seated'"]
+
+        q1["q1 : QueueEntry\nid = 3\nreservation_id = 5\nqueue_number = 12\nposition = 1\nstatus = 'seated'"]
+
+        tblM3["tblM3 : RestaurantTable\nid = 3\ntable_number = 'M3'\ncapacity = 4\narea = 'main'\nstatus = 'occupied'"]
+
+        seat1["seat1 : Seating\nid = 7\nreservation_id = 5\ntable_id = 3\nstatus = 'seated'\nseated_at = '19:15:00'\nleft_at = null"]
+
+        ord1["ord1 : Order\nid = 10\ncustomer_id = 1\nreservation_id = 5\nstatus = 'preparing'\ntotal = 1250.00\nnotes = 'Medium rare steak'"]
+
+        oi1["oi1 : OrderItem\nid = 18\norder_id = 10\nmenu_item_id = 4\nquantity = 2\nunit_price = 350.00\nsubtotal = 700.00"]
+
+        oi2["oi2 : OrderItem\nid = 19\norder_id = 10\nmenu_item_id = 8\nquantity = 2\nunit_price = 275.00\nsubtotal = 550.00"]
+
+        grill["grill : MenuItem\nid = 4\nname = 'Viking Ribeye Steak'\nprice = 350.00\ncategory = 'grill'\navailable = true"]
+
+        bev["bev : MenuItem\nid = 8\nname = 'Craft Draft Beer'\nprice = 275.00\ncategory = 'beverage'\navailable = true"]
+    end
+
+    john --> res1
+    res1 --> q1
+    res1 --> seat1
+    seat1 --> tblM3
+    john --> ord1
+    ord1 --> oi1
+    ord1 --> oi2
+    oi1 --> grill
+    oi2 --> bev
+    ord1 -.-> res1

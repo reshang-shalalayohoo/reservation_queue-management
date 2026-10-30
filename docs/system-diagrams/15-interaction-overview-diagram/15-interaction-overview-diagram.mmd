@@ -1,0 +1,63 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    START(("● Start")) --> REF_AUTH
+
+    subgraph REF_AUTH["ref: Customer Authentication Sequence"]
+        direction TB
+        A1["Enter Credentials -> POST /api/auth/login"]
+        A2["Issue RFC 6750 Bearer JWT"]
+        A3["Establish Socket.IO Handshake Session"]
+    end
+
+    REF_AUTH --> DEC_RES{"Has Confirmed Table Booking?"}
+
+    DEC_RES -->|"No"| REF_RES
+    subgraph REF_RES["ref: Reservation & Queue Sequence"]
+        direction TB
+        B1["Submit Booking (POST /api/reservations)"]
+        B2["Staff Review & Enqueue (PUT status = queued)"]
+        B3["Monitor Waitlist via Socket.IO (queue:update)"]
+        B4["Staff Calls Party & Allocates Dining Table"]
+        B5["Assign Table & Update Seating (POST /api/seating)"]
+    end
+
+    DEC_RES -->|"Yes / Walk-in Seated"| REF_MENU
+    REF_RES --> REF_MENU
+
+    subgraph REF_MENU["ref: Menu Exploration & Cart Sequence"]
+        direction TB
+        C1["Query Catalog (GET /api/menu?category=...)"]
+        C2["Inspect Dish Details & Allergens"]
+        C3["Mutate In-Memory CartContext"]
+    end
+
+    REF_MENU --> REF_ORDER
+
+    subgraph REF_ORDER["ref: Order Submission Sequence"]
+        direction TB
+        D1["Review Cart & Instructions (/order-confirmation)"]
+        D2["Submit Order (POST /api/orders)"]
+        D3["Server Pricing Validation & Database Insert"]
+        D4["Emit 'order:new' to Kitchen Socket Room"]
+    end
+
+    REF_ORDER --> REF_KITCHEN
+
+    subgraph REF_KITCHEN["ref: Kitchen Fulfillment Sequence"]
+        direction TB
+        E1["Kitchen Receives Real-Time Order Ticket"]
+        E2["Update Status to 'preparing' (PUT status)"]
+        E3["Emit 'order:update' -> Customer Live Progress"]
+        E4["Update Status to 'ready' -> Waitstaff Notified"]
+    end
+
+    REF_KITCHEN --> REF_COMPLETE
+
+    subgraph REF_COMPLETE["ref: Dining Conclusion Sequence"]
+        direction TB
+        F1["Deliver Food to Table"]
+        F2["Update Order Status to 'completed'"]
+        F3["Conclude Seating & Release Table (PUT /seating/:id/finish)"]
+    end
+
+    REF_COMPLETE --> END(("◉ Final Node"))

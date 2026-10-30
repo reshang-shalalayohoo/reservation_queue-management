@@ -1,0 +1,30 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph LR
+    Customer["1.0 : Customer Web Browser"]
+    ReactApp["2.0 : React App (OrderConfirmation)"]
+    Axios["3.0 : Axios HTTP Client"]
+    ExpressAPI["4.0 : Express Server Gateway"]
+    AuthMW["5.0 : JWT Auth Middleware"]
+    OrdersCtrl["6.0 : Orders Controller"]
+    MySQL["7.0 : MySQL Database"]
+    SocketBroker["8.0 : Socket.IO Broker"]
+    KitchenBoard["9.0 : Kitchen Display UI"]
+
+    Customer -->|"1: Click Confirm Order"| ReactApp
+    ReactApp -->|"2: Extract cart items"| ReactApp
+    ReactApp -->|"3: POST /api/orders"| Axios
+    Axios -->|"4: HTTP Request + Bearer Token"| ExpressAPI
+    ExpressAPI -->|"5: authenticate()"| AuthMW
+    AuthMW -->|"6: req.user validated"| ExpressAPI
+    ExpressAPI -->|"7: handleCreateOrder()"| OrdersCtrl
+    OrdersCtrl -->|"8: SELECT menu_items"| MySQL
+    MySQL -->|"9: MenuItem records"| OrdersCtrl
+    OrdersCtrl -->|"10: INSERT orders"| MySQL
+    MySQL -->|"11: order_id"| OrdersCtrl
+    OrdersCtrl -->|"12: INSERT order_items"| MySQL
+    OrdersCtrl -->|"13: emit('order:new')"| SocketBroker
+    SocketBroker -->|"14: push to kitchen room"| KitchenBoard
+    OrdersCtrl -->|"15: 201 Created"| ExpressAPI
+    ExpressAPI -->|"16: JSON order payload"| Axios
+    Axios -->|"17: Resolve promise"| ReactApp
+    ReactApp -->|"18: Redirect to /order-status"| Customer

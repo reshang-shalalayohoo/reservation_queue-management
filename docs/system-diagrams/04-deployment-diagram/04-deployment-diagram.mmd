@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph ClientDevice["Client Node: Customer / Staff Device"]
+        BROWSER["Modern Web Browser\n(Chrome / Safari / Firefox / Edge)"]
+        REACT["SPA Artifact: React.js Bundle\n(HTML5 + CSS3 + Transpiled JS)"]
+    end
+
+    subgraph DevEnvironment["Development Host Node (localhost)"]
+        subgraph ViteNode["Vite HTTP Server (:5173)"]
+            VITE["Vite Development Server\nHot Module Replacement"]
+        end
+
+        subgraph ExpressNode["Node.js Application Server (:5000)"]
+            EXPRESS["Express.js REST Application"]
+            SOCKETIO["Socket.IO WebSocket Server"]
+        end
+
+        subgraph MySQLNode["Database Server: MySQL 8.0 (:3306)"]
+            MYSQL_DB["Database Schema: resquedb\nInnoDB Engine · utf8mb4"]
+        end
+    end
+
+    subgraph ProposedProd["Proposed Cloud Production Topology"]
+        CDN["CDN / Edge Static Hosting\n(Vercel / Cloudflare Pages)"]
+        CLOUD_API["Containerized API Cluster\n(Docker / AWS ECS / Railway)"]
+        CLOUD_DB["Managed Cloud MySQL\n(AWS RDS / PlanetScale)"]
+    end
+
+    BROWSER -->|"HTTP :5173"| VITE
+    BROWSER <-.->|"WSS / WS (Port 5000)"| SOCKETIO
+    VITE -->|"Reverse Proxy /api/* -> :5000"| EXPRESS
+    EXPRESS -->|"TCP Socket :3306"| MYSQL_DB
+    SOCKETIO --> EXPRESS
+
+    CDN -.->|"HTTPS REST"| CLOUD_API
+    CLOUD_API -.->|"Encrypted TLS :3306"| CLOUD_DB

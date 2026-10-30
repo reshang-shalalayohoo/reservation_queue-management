@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'nodeBorder':'#000000', 'actorBorder':'#000000', 'actorBkg':'#ffffff', 'actorTextColor':'#000000' }}}%%
+sequenceDiagram
+    autonumber
+    actor Customer as Customer
+    participant React as React Frontend (OrderConfirmation.jsx)
+    participant Axios as Axios API Client (api.js)
+    participant Express as Express Server (server.js)
+    participant AuthMW as JWT Middleware (auth.js)
+    participant OrderCtrl as Orders Controller (orders.js)
+    participant MySQL as MySQL Database (resquedb)
+    participant SocketIO as Socket.IO Broker (socket/index.js)
+    participant Kitchen as Kitchen Display UI (OrderManagement.jsx)
+
+    Customer->>React: Click "Confirm & Place Order"
+    React->>React: Retrieve CartContext items & format payload
+    React->>Axios: POST /api/orders {items, reservation_id, notes}
+    Axios->>Express: HTTP POST /api/orders with Bearer JWT
+    Express->>AuthMW: authenticate(req, res, next)
+    AuthMW-->>Express: Token Verified (req.user = decoded)
+    Express->>OrderCtrl: Invoke POST handler
+
+    loop Validate Each Cart Item
+        OrderCtrl->>MySQL: SELECT * FROM menu_items WHERE id = ?
+        MySQL-->>OrderCtrl: Return price & available flag
+        OrderCtrl->>OrderCtrl: Verify available == true & compute line subtotal
+    end
+
+    OrderCtrl->>MySQL: INSERT INTO orders (customer_id, reservation_id, total, notes)
+    MySQL-->>OrderCtrl: Return insertId (order_id)
+
+    loop Insert Order Line Items
+        OrderCtrl->>MySQL: INSERT INTO order_items (order_id, menu_item_id, quantity, unit_price, subtotal)
+        MySQL-->>OrderCtrl: Row Inserted OK
+    end
+
+    OrderCtrl->>MySQL: SELECT order joined with customer & items
+    MySQL-->>OrderCtrl: Return committed order payload
+
+    OrderCtrl->>SocketIO: io.to('kitchen').emit('order:new', orderPayload)
+    SocketIO-->>Kitchen: Push WebSocket message 'order:new'
+    Kitchen->>Kitchen: Prepend new ticket to active orders board
+
+    OrderCtrl-->>Express: Send HTTP 201 Created {message, order}
+    Express-->>Axios: HTTP 201 Response Payload
+    Axios-->>React: Promise resolved with order data
+    React->>React: clearCart() via CartContext
+    React-->>Customer: Navigate to /order-status (Display live tracker)

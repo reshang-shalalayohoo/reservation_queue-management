@@ -1,0 +1,94 @@
+﻿classDiagram
+    class User {
+        +int id
+        +String name
+        +String email
+        +String phone
+        +String password_hash
+        +Enum role
+        +DateTime created_at
+        +register()
+        +login()
+        +getProfile()
+    }
+    class Reservation {
+        +int id
+        +int customer_id
+        +Date reservation_date
+        +Time reservation_time
+        +int guests
+        +Enum table_preference
+        +int table_id
+        +Enum status
+        +String notes
+        +create()
+        +updateStatus()
+        +cancel()
+    }
+    class QueueEntry {
+        +int id
+        +int reservation_id
+        +int queue_number
+        +int position
+        +Enum status
+        +updatePosition()
+        +call()
+        +markSeated()
+    }
+    class RestaurantTable {
+        +int id
+        +String table_number
+        +int capacity
+        +Enum area
+        +Enum status
+        +updateStatus()
+        +checkAvailability()
+    }
+    class Seating {
+        +int id
+        +int reservation_id
+        +int table_id
+        +DateTime seated_at
+        +DateTime left_at
+        +Enum status
+        +assignTable()
+        +finishSeating()
+    }
+    class MenuItem {
+        +int id
+        +String name
+        +String description
+        +Decimal price
+        +Enum category
+        +String image_url
+        +Boolean available
+        +toggleAvailability()
+    }
+    class Order {
+        +int id
+        +int customer_id
+        +int reservation_id
+        +Enum status
+        +Decimal total
+        +String notes
+        +placeOrder()
+        +updateStatus()
+        +calculateTotal()
+    }
+    class OrderItem {
+        +int id
+        +int order_id
+        +int menu_item_id
+        +int quantity
+        +Decimal unit_price
+        +Decimal subtotal
+    }
+    User "1" --> "0..*" Reservation : creates
+    User "1" --> "0..*" Order : places
+    Reservation "1" --> "0..1" QueueEntry : generates
+    Reservation "1" --> "0..1" Seating : assigned_to
+    Reservation "0..*" --> "0..1" RestaurantTable : prefers
+    Seating "1" --> "1" RestaurantTable : occupies
+    Order "1" --> "1..*" OrderItem : contains
+    OrderItem "0..*" --> "1" MenuItem : references
+    Order "0..*" --> "0..1" Reservation : linked_to

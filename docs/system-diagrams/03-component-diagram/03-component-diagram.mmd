@@ -1,0 +1,51 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph Frontend["Frontend Client (React.js + Vite)"]
+        RC["React Components\nNavbar · ProtectedRoute · EmptyState"]
+        RP["React Router DOM (17 Views)"]
+        CTX["Context Providers\nAuthContext · CartContext · SocketContext"]
+        API_SVC["API Service\nAxios HTTP Client with Interceptors"]
+        SOCK_C["Socket.IO Client\nsocket.io-client"]
+    end
+
+    subgraph Backend["Backend Server (Node.js + Express.js)"]
+        EXP["Express Application Server"]
+        MW["Middleware Pipeline\nJWT Auth · CORS · Role Guard"]
+        subgraph Controllers["REST API Route Controllers"]
+            AC["auth.js Controller"]
+            RES_C["reservations.js Controller"]
+            QC["queue.js Controller"]
+            TC["tables.js Controller"]
+            SC["seating.js Controller"]
+            MC["menu.js Controller"]
+            OC["orders.js Controller"]
+            DC["dashboard.js Controller"]
+        end
+        SOCK_S["Socket.IO Real-Time Engine\nRoom Broadcaster"]
+        DB_POOL["MySQL Connection Pool\nmysql2/promise"]
+    end
+
+    subgraph Database["Database (MySQL 8.0 Engine)"]
+        SCHEMA["Relational Schema\nusers · reservations · queue_entries\nrestaurant_tables · seating\nmenu_items · orders · order_items"]
+    end
+
+    subgraph ProposedComponents["Proposed ERP Modules"]
+        POS_C["POS & Billing Component\nPayments · Receipts"]
+        INV_C["Inventory & Procurement Component\nStock Depletion · Purchasing"]
+    end
+
+    RC --> RP
+    RP --> CTX
+    CTX --> API_SVC
+    CTX --> SOCK_C
+
+    API_SVC -->|"HTTP/JSON"| EXP
+    SOCK_C <-.->|"WebSocket / Polling"| SOCK_S
+
+    EXP --> MW --> Controllers
+    Controllers --> DB_POOL
+    SOCK_S --> DB_POOL
+    DB_POOL --> SCHEMA
+
+    POS_C -.->|"Proposed"| EXP
+    INV_C -.->|"Proposed"| EXP

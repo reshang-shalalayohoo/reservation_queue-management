@@ -1,0 +1,63 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph UL["USER LAYER"]
+        direction LR
+        U1["Customer"]
+        U2["Reservation Staff"]
+        U3["Service/Kitchen Staff"]
+        U4["Management"]
+    end
+
+    U1 & U2 & U3 & U4 -->|"HTTPS / Web Browser"| FE
+
+    subgraph FE["FRONTEND LAYER — React.js + Vite (Port 5173)"]
+        direction TB
+        AUTH_UI["Auth Module\nLogin · Register"]
+        CUST_UI["Customer Module\nReservation · My Reservations · Queue Status\nDigital Menu · Menu Item Details\nCart · Order Confirmation · Order Status"]
+        STAFF_UI["Staff Module\nReservation Mgmt · Reservation Details\nQueue Mgmt · Table Mgmt · Seating Mgmt"]
+        KITCHEN_UI["Kitchen Module\nOrder Mgmt · Order Details\nOrder Status Mgmt"]
+        MGMT_UI["Management Module\nDashboard"]
+        CTX["Contexts: AuthContext · CartContext · SocketContext"]
+        SVC["Services: Axios API Client"]
+    end
+
+    FE -->|"REST API (HTTP/JSON via Axios)"| BE
+    FE <-.->|"Socket.IO (WebSocket / Polling)"| SOCK
+
+    subgraph BE["BACKEND LAYER — Node.js + Express.js (Port 5000)"]
+        direction TB
+        MW["Middleware\nJWT Auth · CORS · Role Authorization"]
+        subgraph ROUTES["REST API Route Controllers"]
+            R1["/api/auth"]
+            R2["/api/reservations"]
+            R3["/api/queue"]
+            R4["/api/tables"]
+            R5["/api/seating"]
+            R6["/api/menu"]
+            R7["/api/orders"]
+            R8["/api/dashboard"]
+        end
+        SOCK["Socket.IO Server\nReal-Time Signal Broker"]
+    end
+
+    BE -->|"SQL Queries (mysql2/promise)"| DB
+
+    subgraph DB["DATABASE LAYER — MySQL 8.0 (Port 3306)"]
+        direction LR
+        T1[("users")]
+        T2[("reservations")]
+        T3[("queue_entries")]
+        T4[("restaurant_tables")]
+        T5[("seating")]
+        T6[("menu_items")]
+        T7[("orders")]
+        T8[("order_items")]
+    end
+
+    subgraph PROPOSED["PROPOSED ENTERPRISE EXTENSIONS"]
+        direction LR
+        POS["POS & Billing\nPayments · Receipts · Invoicing"]
+        INV["Inventory & Procurement\nStock Depletion · Suppliers · POs"]
+    end
+
+    PROPOSED -.->|"Planned Integration"| BE

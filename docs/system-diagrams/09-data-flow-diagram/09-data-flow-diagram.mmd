@@ -1,0 +1,60 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph Entities["External Entities"]
+        E1["Customer"]
+        E2["Reservation Staff"]
+        E3["Service/Kitchen Staff"]
+        E4["Management"]
+    end
+
+    subgraph Processes["System Processes (Level 1 DFD)"]
+        P1("1.0 Manage Table Reservations")
+        P2("2.0 Manage Queue & Seating")
+        P3("3.0 Manage Digital Menu")
+        P4("4.0 Process Customer Orders")
+        P5("5.0 Fulfill Kitchen Orders")
+        P6("6.0 Monitor Operational Telemetry")
+    end
+
+    subgraph DataStores["Data Stores"]
+        DS1[("D1: users")]
+        DS2[("D2: reservations")]
+        DS3[("D3: queue_entries")]
+        DS4[("D4: restaurant_tables & seating")]
+        DS5[("D5: menu_items")]
+        DS6[("D6: orders")]
+        DS7[("D7: order_items")]
+    end
+
+    E1 -->|"Booking Submission"| P1
+    P1 -->|"Verify Identity"| DS1
+    P1 -->|"Write / Read Booking"| DS2
+    P1 -->|"New Booking Signal"| E2
+    E2 -->|"Approval / Triage Action"| P1
+    P1 -->|"Booking Confirmation"| E1
+
+    P1 -->|"Approved Reservation ID"| P2
+    P2 -->|"Record Queue Placement"| DS3
+    P2 -->|"Assign Dining Table"| DS4
+    P2 -->|"Waitlist Alerts (WebSocket)"| E1
+    E2 -->|"Queue & Seating Mutations"| P2
+
+    E1 -->|"Browse Menu Catalog"| P3
+    P3 -->|"Fetch Active Dishes"| DS5
+    P3 -->|"Display Menu Details"| E1
+    E4 -->|"Catalog Add/Edit/Delete"| P3
+    P3 -->|"Update Menu Records"| DS5
+
+    E1 -->|"Submit Order Payload"| P4
+    P4 -->|"Validate Availability & Pricing"| DS5
+    P4 -->|"Store Order Header"| DS6
+    P4 -->|"Store Line Items"| DS7
+    P4 -->|"Push Ticket (order:new)"| E3
+
+    E3 -->|"Advance Preparation Status"| P5
+    P5 -->|"Update Ticket Record"| DS6
+    P5 -->|"Live Status Signal (order:update)"| E1
+
+    E4 -->|"Request Operational Metrics"| P6
+    DS2 & DS3 & DS4 & DS6 -->|"Read Aggregate Data"| P6
+    P6 -->|"Render Visual Metrics"| E4

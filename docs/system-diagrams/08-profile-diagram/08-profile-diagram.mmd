@@ -1,0 +1,30 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph ProfileDef["UML Profile: VikingsERPExtensions"]
+        direction TB
+
+        subgraph Stereotypes["Domain Stereotypes"]
+            S1["«ReactComponent»\nExtends: UML Component\nTag: renderMethod = JSX\nTag: hasState = Boolean"]
+            S2["«APIRoute»\nExtends: UML Component\nTag: httpMethod = GET|POST|PUT|DELETE\nTag: path = String\nTag: authRequired = Boolean"]
+            S3["«MySQLTable»\nExtends: UML Class\nTag: engine = InnoDB\nTag: charset = utf8mb4"]
+            S4["«JWTProtected»\nExtends: UML Interface\nTag: tokenExpiry = 24h\nConstraint: RFC 6750 Bearer"]
+            S5["«SocketEvent»\nExtends: UML Signal\nTag: direction = emit|listen\nTag: room = String"]
+            S6["«RoleGuard»\nExtends: UML Constraint\nTag: allowedRoles = RoleEnum[]\nConstraint: 403 on role mismatch"]
+        end
+
+        subgraph AppliedExamples["Concrete Metaclass Applications"]
+            A1["«ReactComponent»\nCart.jsx\nrenderMethod = JSX\nhasState = true"]
+            A2["«APIRoute»\nPOST /api/orders\nhttpMethod = POST\npath = /api/orders\nauthRequired = true"]
+            A3["«MySQLTable»\norders\nengine = InnoDB\ncharset = utf8mb4"]
+            A4["«JWTProtected»\nAuthentication Middleware\ntokenExpiry = 24h"]
+            A5["«SocketEvent»\norder:new\ndirection = emit\nroom = kitchen"]
+            A6["«RoleGuard»\nDashboard Access Guard\nallowedRoles = [management, reservation_staff]"]
+        end
+    end
+
+    S1 -.-> A1
+    S2 -.-> A2
+    S3 -.-> A3
+    S4 -.-> A4
+    S5 -.-> A5
+    S6 -.-> A6

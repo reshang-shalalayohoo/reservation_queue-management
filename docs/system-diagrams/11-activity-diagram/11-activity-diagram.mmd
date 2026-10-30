@@ -1,0 +1,45 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    START(("● Start")) --> Login["Customer Authenticates (JWT Token Issued)"]
+    Login --> Browse["Customer Browses Digital Menu Catalog"]
+    Browse --> ViewItem["Inspect Menu Item Details & Options"]
+    ViewItem --> AddDecision{"Add Dish to Cart?"}
+    
+    AddDecision -->|"Yes"| AddToCart["Append Item to CartContext (Update Subtotal)"]
+    AddDecision -->|"No"| BrowseMore
+    
+    AddToCart --> BrowseMore{"Browse More Items?"}
+    BrowseMore -->|"Yes"| Browse
+    BrowseMore -->|"No"| ReviewCart["Open Cart Interface (/cart)"]
+
+    ReviewCart --> ModifyDecision{"Modify Items or Quantities?"}
+    ModifyDecision -->|"Yes"| UpdateQty["Adjust Quantities or Remove Line Items"]
+    UpdateQty --> ReviewCart
+    ModifyDecision -->|"No"| Checkout["Proceed to Order Confirmation (/order-confirmation)"]
+
+    Checkout --> SubmitOrder["Confirm Order & Submit (POST /api/orders)"]
+    SubmitOrder --> ServerValidation["Server: Validate Item Availability & Prices"]
+    
+    ServerValidation --> ValidDecision{"Validation Passed?"}
+    ValidDecision -->|"No"| DisplayError["Display Error Alert (400 Bad Request)"]
+    DisplayError --> ReviewCart
+
+    ValidDecision -->|"Yes"| PersistOrder["Insert Header into 'orders' & Rows into 'order_items'"]
+    PersistOrder --> SocketBroadcast["Emit 'order:new' to Kitchen Room"]
+    
+    SocketBroadcast --> ShowConfirmed["Customer UI: Clear Cart & Navigate to /order-status"]
+    SocketBroadcast --> KitchenBoard["Kitchen Display: Ticket Appears Live"]
+
+    KitchenBoard --> StartPrep["Kitchen Staff Starts Cooking (PUT status = 'preparing')"]
+    StartPrep --> EmitPrep["Server Emits 'order:update' (preparing)"]
+    EmitPrep --> CustTracking1["Customer Step Bar: 'Preparing' Highlighted"]
+
+    CustTracking1 --> FinishCook["Kitchen Completes Cooking (PUT status = 'ready')"]
+    FinishCook --> EmitReady["Server Emits 'order:update' (ready)"]
+    EmitReady --> CustTracking2["Customer Step Bar: 'Ready' Highlighted"]
+
+    CustTracking2 --> ServeFood["Staff Serves Food to Customer Dining Table"]
+    ServeFood --> MarkComplete["Staff Concludes Order (PUT status = 'completed')"]
+    MarkComplete --> EmitComplete["Server Emits 'order:update' (completed)"]
+    EmitComplete --> FinalProgress["Customer Step Bar: 'Completed'"]
+    FinalProgress --> END(("◉ Final Node"))

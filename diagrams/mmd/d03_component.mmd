@@ -1,0 +1,77 @@
+﻿graph TB
+    subgraph FE["FRONTEND - React.js + Vite"]
+        subgraph FE_COMP["React Components"]
+            FC1["Navbar"]
+            FC2["ProtectedRoute"]
+        end
+        subgraph FE_CTX["Context Providers"]
+            CTX1["AuthContext"]
+            CTX2["CartContext"]
+            CTX3["SocketContext"]
+        end
+        subgraph FE_PAGES["Pages - 17 Components"]
+            subgraph CUST["Customer Pages"]
+                CP1["Reservation"]
+                CP2["MyReservations"]
+                CP3["QueueStatus"]
+                CP4["DigitalMenu"]
+                CP5["MenuItemDetails"]
+                CP6["Cart"]
+                CP7["OrderConfirmation"]
+                CP8["OrderStatus"]
+            end
+            subgraph STAFF["Staff Pages"]
+                SP1["ReservationMgmt"]
+                SP2["ReservationDetails"]
+                SP3["QueueMgmt"]
+                SP4["TableMgmt"]
+                SP5["SeatingMgmt"]
+            end
+            subgraph KITCH["Kitchen Pages"]
+                KP1["OrderMgmt"]
+                KP2["OrderDetails"]
+                KP3["OrderStatusMgmt"]
+            end
+            subgraph MGMT["Management"]
+                MP1["Dashboard"]
+            end
+        end
+        API_SVC["API Service - Axios HTTP Client"]
+        SOCK_CLI["Socket.IO Client"]
+    end
+
+    subgraph BE["BACKEND - Node.js + Express.js"]
+        EXP["Express Server"]
+        subgraph MW["Middleware"]
+            MW1["JWT Authentication"]
+            MW2["CORS"]
+            MW3["Role Authorization"]
+        end
+        subgraph ROUTES["API Route Controllers"]
+            R1["/api/auth"]
+            R2["/api/reservations"]
+            R3["/api/queue"]
+            R4["/api/tables"]
+            R5["/api/seating"]
+            R6["/api/menu"]
+            R7["/api/orders"]
+            R8["/api/dashboard"]
+        end
+        SOCK_SRV["Socket.IO Server"]
+        DB_POOL["MySQL Connection Pool - mysql2"]
+    end
+
+    subgraph DB["DATABASE - MySQL"]
+        SCHEMA["resquedb - 8 Tables"]
+    end
+
+    FE_PAGES --> FE_CTX
+    FE_CTX --> API_SVC
+    FE_CTX --> SOCK_CLI
+    API_SVC -->|"REST API"| EXP
+    SOCK_CLI <-->|"WebSocket"| SOCK_SRV
+    EXP --> MW
+    MW --> ROUTES
+    ROUTES --> DB_POOL
+    SOCK_SRV --> DB_POOL
+    DB_POOL --> SCHEMA

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <style>
+    .title { font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold; fill: #000000; }
+    .subtitle { font-family: 'Arial', sans-serif; font-size: 12px; font-style: italic; fill: #333333; }
+    .lane-title { font-family: 'Arial', sans-serif; font-size: 13px; font-weight: bold; fill: #000000; }
+    .state-label { font-family: 'Arial', sans-serif; font-size: 10px; fill: #000000; }
+    .time-label { font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; fill: #000000; }
+    .event-label { font-family: 'Arial', sans-serif; font-size: 9px; font-weight: bold; fill: #000000; }
+    .grid-line { stroke: #dddddd; stroke-width: 1; stroke-dasharray: 3,3; }
+    .axis-line { stroke: #000000; stroke-width: 1.5; }
+    .waveform { stroke: #000000; stroke-width: 2.5; fill: none; stroke-linejoin: miter; }
+    .event-impulse { stroke: #000000; stroke-width: 1.5; }
+    .box-border { stroke: #000000; stroke-width: 1.5; fill: #ffffff; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect x="0" y="0" width="1200" height="800" fill="#ffffff" stroke="#000000" stroke-width="2" />
+
+  <!-- Diagram Title Frame -->
+  <text x="30" y="35" class="title">UML 2.5 Timing Diagram: Customer Dining &amp; Real-Time Order Lifecycle</text>
+  <text x="30" y="55" class="subtitle">System: VikingsERP | State/Value Stepped Lifelines | Timeline: 18:00 – 19:35 (Assumed Illustrative Timing)</text>
+  <line x1="30" y1="65" x2="1170" y2="65" stroke="#000000" stroke-width="1" />
+  <line x1="220" y1="80" x2="220" y2="720" class="grid-line" />
+  <text x="220" y="738" text-anchor="middle" class="time-label">18:00</text>
+  <line x1="220" y1="720" x2="220" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="365.2631578947368" y1="80" x2="365.2631578947368" y2="720" class="grid-line" />
+  <text x="365.2631578947368" y="738" text-anchor="middle" class="time-label">18:15</text>
+  <line x1="365.2631578947368" y1="720" x2="365.2631578947368" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="462.1052631578947" y1="80" x2="462.1052631578947" y2="720" class="grid-line" />
+  <text x="462.1052631578947" y="738" text-anchor="middle" class="time-label">18:25</text>
+  <line x1="462.1052631578947" y1="720" x2="462.1052631578947" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="655.7894736842105" y1="80" x2="655.7894736842105" y2="720" class="grid-line" />
+  <text x="655.7894736842105" y="738" text-anchor="middle" class="time-label">18:45</text>
+  <line x1="655.7894736842105" y1="720" x2="655.7894736842105" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="704.2105263157894" y1="80" x2="704.2105263157894" y2="720" class="grid-line" />
+  <text x="704.2105263157894" y="738" text-anchor="middle" class="time-label">18:50</text>
+  <line x1="704.2105263157894" y1="720" x2="704.2105263157894" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="820.421052631579" y1="80" x2="820.421052631579" y2="720" class="grid-line" />
+  <text x="820.421052631579" y="738" text-anchor="middle" class="time-label">19:02</text>
+  <line x1="820.421052631579" y1="720" x2="820.421052631579" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="839.7894736842105" y1="80" x2="839.7894736842105" y2="720" class="grid-line" />
+  <text x="839.7894736842105" y="738" text-anchor="middle" class="time-label">19:04</text>
+  <line x1="839.7894736842105" y1="720" x2="839.7894736842105" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="1033.4736842105262" y1="80" x2="1033.4736842105262" y2="720" class="grid-line" />
+  <text x="1033.4736842105262" y="738" text-anchor="middle" class="time-label">19:24</text>
+  <line x1="1033.4736842105262" y1="720" x2="1033.4736842105262" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="1110.9473684210525" y1="80" x2="1110.9473684210525" y2="720" class="grid-line" />
+  <text x="1110.9473684210525" y="738" text-anchor="middle" class="time-label">19:32</text>
+  <line x1="1110.9473684210525" y1="720" x2="1110.9473684210525" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="1140" y1="80" x2="1140" y2="720" class="grid-line" />
+  <text x="1140" y="738" text-anchor="middle" class="time-label">19:35</text>
+  <line x1="1140" y1="720" x2="1140" y2="725" stroke="#000000" stroke-width="1.5" />
+  <line x1="220" y1="720" x2="1140" y2="720" class="axis-line" />
+  <text x="1150" y="724" class="time-label">Time</text>
+
+  <!-- Lifeline 1: Reservation -->
+  <rect x="25" y="90" width="180" height="180" class="box-border" />
+  <text x="35" y="115" class="lane-title">res : Reservation</text>
+  <text x="35" y="132" class="state-label">[State Lifeline]</text>
+  <text x="200" y="114" text-anchor="end" class="state-label">Completed</text>
+  <line x1="220" y1="110" x2="1140" y2="110" class="grid-line" />
+  <text x="200" y="139" text-anchor="end" class="state-label">Seated</text>
+  <line x1="220" y1="135" x2="1140" y2="135" class="grid-line" />
+  <text x="200" y="164" text-anchor="end" class="state-label">Called</text>
+  <line x1="220" y1="160" x2="1140" y2="160" class="grid-line" />
+  <text x="200" y="189" text-anchor="end" class="state-label">Queued</text>
+  <line x1="220" y1="185" x2="1140" y2="185" class="grid-line" />
+  <text x="200" y="214" text-anchor="end" class="state-label">Approved</text>
+  <line x1="220" y1="210" x2="1140" y2="210" class="grid-line" />
+  <text x="200" y="239" text-anchor="end" class="state-label">Pending</text>
+  <line x1="220" y1="235" x2="1140" y2="235" class="grid-line" />
+  <text x="200" y="264" text-anchor="end" class="state-label">None / Init</text>
+  <line x1="220" y1="260" x2="1140" y2="260" class="grid-line" />
+  <path d="M 220 235 L 365.2631578947368 235 L 365.2631578947368 210 L 462.1052631578947 210 L 462.1052631578947 185 L 655.7894736842105 185 L 655.7894736842105 160 L 704.2105263157894 160 L 704.2105263157894 135 L 1110.9473684210525 135 L 1110.9473684210525 110 L 1140 110" class="waveform" />
+
+  <!-- Lifeline 2: Order -->
+  <rect x="25" y="290" width="180" height="130" class="box-border" />
+  <text x="35" y="315" class="lane-title">ord : Order</text>
+  <text x="35" y="332" class="state-label">[State Lifeline]</text>
+  <text x="200" y="314" text-anchor="end" class="state-label">Completed</text>
+  <line x1="220" y1="310" x2="1140" y2="310" class="grid-line" />
+  <text x="200" y="339" text-anchor="end" class="state-label">Ready</text>
+  <line x1="220" y1="335" x2="1140" y2="335" class="grid-line" />
+  <text x="200" y="364" text-anchor="end" class="state-label">Preparing</text>
+  <line x1="220" y1="360" x2="1140" y2="360" class="grid-line" />
+  <text x="200" y="389" text-anchor="end" class="state-label">Pending</text>
+  <line x1="220" y1="385" x2="1140" y2="385" class="grid-line" />
+  <text x="200" y="414" text-anchor="end" class="state-label">Idle / Cart</text>
+  <line x1="220" y1="410" x2="1140" y2="410" class="grid-line" />
+  <path d="M 220 410 L 820.421052631579 410 L 820.421052631579 385 L 839.7894736842105 385 L 839.7894736842105 360 L 1033.4736842105262 360 L 1033.4736842105262 335 L 1110.9473684210525 335 L 1110.9473684210525 310 L 1140 310" class="waveform" />
+
+  <!-- Lifeline 3: Table M3 -->
+  <rect x="25" y="440" width="180" height="85" class="box-border" />
+  <text x="35" y="465" class="lane-title">tblM3 : RestaurantTable</text>
+  <text x="35" y="482" class="state-label">[Discrete Value Lifeline]</text>
+  <text x="200" y="469" text-anchor="end" class="state-label">Occupied</text>
+  <line x1="220" y1="465" x2="1140" y2="465" class="grid-line" />
+  <text x="200" y="509" text-anchor="end" class="state-label">Available</text>
+  <line x1="220" y1="505" x2="1140" y2="505" class="grid-line" />
+  <path d="M 220 505 L 704.2105263157894 505 L 704.2105263157894 465 L 1110.9473684210525 465 L 1110.9473684210525 505 L 1140 505" class="waveform" />
+
+  <!-- Lifeline 4: Socket Events -->
+  <rect x="25" y="545" width="180" height="155" class="box-border" />
+  <text x="35" y="570" class="lane-title">io : Socket.IO Events</text>
+  <text x="35" y="587" class="state-label">[Signal Occurrence Lane]</text>
+  <line x1="220" y1="680" x2="1140" y2="680" stroke="#000000" stroke-width="1.5" />
+  <!-- Event: reservation:new at m=0 -->
+  <circle cx="220" cy="680" r="3.5" fill="#000000" />
+  <line x1="220" y1="680" x2="220" y2="585" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="216" y="563" width="100" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="222" y="575" class="event-label">reservation:new</text>
+  <!-- Event: reservation:update at m=15 -->
+  <circle cx="365.2631578947368" cy="680" r="3.5" fill="#000000" />
+  <line x1="365.2631578947368" y1="680" x2="365.2631578947368" y2="605" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="361.2631578947368" y="583" width="118" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="367.2631578947368" y="595" class="event-label">reservation:update</text>
+  <!-- Event: queue:update (enqueued) at m=25 -->
+  <circle cx="462.1052631578947" cy="680" r="3.5" fill="#000000" />
+  <line x1="462.1052631578947" y1="680" x2="462.1052631578947" y2="625" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="458.1052631578947" y="603" width="148" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="464.1052631578947" y="615" class="event-label">queue:update (enqueued)</text>
+  <!-- Event: queue:update (called) at m=45 -->
+  <circle cx="655.7894736842105" cy="680" r="3.5" fill="#000000" />
+  <line x1="655.7894736842105" y1="680" x2="655.7894736842105" y2="645" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="651.7894736842105" y="623" width="136" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="657.7894736842105" y="635" class="event-label">queue:update (called)</text>
+  <!-- Event: seating:update at m=50 -->
+  <circle cx="704.2105263157894" cy="680" r="3.5" fill="#000000" />
+  <line x1="704.2105263157894" y1="680" x2="704.2105263157894" y2="665" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="700.2105263157894" y="643" width="94" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="706.2105263157894" y="655" class="event-label">seating:update</text>
+  <!-- Event: order:new at m=62 -->
+  <circle cx="820.421052631579" cy="680" r="3.5" fill="#000000" />
+  <line x1="820.421052631579" y1="680" x2="820.421052631579" y2="585" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="816.421052631579" y="563" width="64" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="822.421052631579" y="575" class="event-label">order:new</text>
+  <!-- Event: order:update (prep) at m=64 -->
+  <circle cx="839.7894736842105" cy="680" r="3.5" fill="#000000" />
+  <line x1="839.7894736842105" y1="680" x2="839.7894736842105" y2="605" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="835.7894736842105" y="583" width="124" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="841.7894736842105" y="595" class="event-label">order:update (prep)</text>
+  <!-- Event: order:update (ready) at m=84 -->
+  <circle cx="1033.4736842105262" cy="680" r="3.5" fill="#000000" />
+  <line x1="1033.4736842105262" y1="680" x2="1033.4736842105262" y2="625" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="1029.4736842105262" y="603" width="130" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="1035.4736842105262" y="615" class="event-label">order:update (ready)</text>
+  <!-- Event: order:update (done) at m=92 -->
+  <circle cx="1110.9473684210525" cy="680" r="3.5" fill="#000000" />
+  <line x1="1110.9473684210525" y1="680" x2="1110.9473684210525" y2="645" class="event-impulse" stroke-dasharray="2,2" />
+  <rect x="1106.9473684210525" y="623" width="124" height="16" fill="#ffffff" stroke="#000000" stroke-width="1" />
+  <text x="1112.9473684210525" y="635" class="event-label">order:update (done)</text>
+</svg>

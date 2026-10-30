@@ -1,0 +1,112 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'nodeBorder':'#000000', 'classText':'#000000' }}}%%
+classDiagram
+    class User {
+        +int id
+        +string name
+        +string email
+        +string phone
+        +string password_hash
+        +enum role
+        +datetime created_at
+        +register(name, email, password, phone, role)
+        +login(email, password)
+        +getProfile()
+    }
+
+    class Reservation {
+        +int id
+        +int customer_id
+        +date reservation_date
+        +time reservation_time
+        +int guests
+        +enum table_preference
+        +int table_id
+        +enum status
+        +string notes
+        +datetime created_at
+        +datetime updated_at
+        +create()
+        +updateStatus(status)
+        +cancel()
+    }
+
+    class QueueEntry {
+        +int id
+        +int reservation_id
+        +int queue_number
+        +int position
+        +enum status
+        +datetime created_at
+        +datetime updated_at
+        +updatePosition(position)
+        +call()
+        +markSeated()
+        +markNoShow()
+    }
+
+    class RestaurantTable {
+        +int id
+        +string table_number
+        +int capacity
+        +enum area
+        +enum status
+        +datetime created_at
+        +updateStatus(status)
+        +checkAvailability()
+    }
+
+    class Seating {
+        +int id
+        +int reservation_id
+        +int table_id
+        +datetime seated_at
+        +datetime left_at
+        +enum status
+        +assignTable(reservation_id, table_id)
+        +finishSeating()
+    }
+
+    class MenuItem {
+        +int id
+        +string name
+        +string description
+        +decimal price
+        +enum category
+        +string image_url
+        +boolean available
+        +datetime created_at
+        +toggleAvailability()
+    }
+
+    class Order {
+        +int id
+        +int customer_id
+        +int reservation_id
+        +enum status
+        +decimal total
+        +string notes
+        +datetime created_at
+        +datetime updated_at
+        +placeOrder(items, notes)
+        +updateStatus(status)
+        +calculateTotal()
+    }
+
+    class OrderItem {
+        +int id
+        +int order_id
+        +int menu_item_id
+        +int quantity
+        +decimal unit_price
+        +decimal subtotal
+    }
+
+    User "1" --> "0..*" Reservation : creates
+    User "1" --> "0..*" Order : places
+    Reservation "1" --> "0..1" QueueEntry : generates
+    Reservation "1" --> "0..1" Seating : assigned to
+    Reservation "0..*" --> "0..1" RestaurantTable : allocates
+    Seating "1" --> "1" RestaurantTable : occupies
+    Order "1" --> "1..*" OrderItem : contains
+    OrderItem "0..*" --> "1" MenuItem : references
+    Order "0..*" --> "0..1" Reservation : linked to

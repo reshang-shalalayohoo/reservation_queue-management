@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph POSReqs["POS & Ordering Functional Requirements"]
+        REQ_POS_1["«requirement»\nREQ-POS-001: Order Processing\nId: 101\nText: The system shall enable authenticated customers to browse the digital menu, manage shopping cart quantities, and submit food orders."]
+        REQ_POS_2["«requirement»\nREQ-POS-002: Server-Side Billing Calculation\nId: 102\nText: The system shall automatically compute order totals and line subtotals based on database menu prices to prevent client tampering."]
+        REQ_POS_3["«requirement»\nREQ-POS-003: Real-Time Order Tracking\nId: 103\nText: The system shall broadcast live order preparation status updates to customer devices via WebSocket connections."]
+        REQ_POS_4["«requirement»\nREQ-POS-004: Kitchen Ticket Management\nId: 104\nText: The system shall display incoming tickets to kitchen personnel and support status progression (pending -> preparing -> ready -> completed)."]
+        REQ_POS_5["«requirement»\nREQ-POS-005: Payment Gateway Settlement\nId: 105\nText: (PROPOSED) The system shall process digital payments (GCash, Maya, Credit Card) upon order conclusion."]
+        REQ_POS_6["«requirement»\nREQ-POS-006: Fiscal Receipt Printing\nId: 106\nText: (PROPOSED) The system shall generate official BIR-compliant sales receipts via thermal ESC/POS hardware."]
+    end
+
+    subgraph InvReqs["Inventory & Menu Functional Requirements"]
+        REQ_INV_1["«requirement»\nREQ-INV-001: Menu Catalog Management\nId: 201\nText: The system shall maintain dishes categorized by dining course with price, description, and availability flags."]
+        REQ_INV_2["«requirement»\nREQ-INV-002: Real-Time Availability Toggling\nId: 202\nText: The system shall allow authorized management staff to instantly toggle menu item availability."]
+        REQ_INV_3["«requirement»\nREQ-INV-003: Recipe-Based Stock Depletion\nId: 203\nText: (PROPOSED) The system shall deduct raw ingredient inventory quantities upon customer order confirmation."]
+        REQ_INV_4["«requirement»\nREQ-INV-004: Supplier Catalog Management\nId: 204\nText: (PROPOSED) The system shall record raw material supplier profiles, contracts, and contact directories."]
+        REQ_INV_5["«requirement»\nREQ-INV-005: Automated Purchase Requisitions\nId: 205\nText: (PROPOSED) The system shall generate purchase orders to suppliers when stock levels reach reorder thresholds."]
+        REQ_INV_6["«requirement»\nREQ-INV-006: Low-Stock Automated Alerts\nId: 206\nText: (PROPOSED) The system shall push alerts to kitchen management when ingredient stock falls below safety limits."]
+    end
+
+    subgraph ImplComponents["Implementing System Components"]
+        COMP_CART["frontend/src/pages/customer/Cart.jsx\nfrontend/src/context/CartContext.jsx"]
+        COMP_ORDER_CTRL["backend/routes/orders.js Controller\nPOST /api/orders"]
+        COMP_SOCKET["backend/socket/index.js\nfrontend/src/context/SocketContext.jsx"]
+        COMP_KITCHEN_UI["frontend/src/pages/kitchen/OrderManagement.jsx\nOrderStatusManagement.jsx"]
+        COMP_MENU_CTRL["backend/routes/menu.js Controller\nGET/POST/PUT /api/menu"]
+        COMP_DB["MySQL Database Schema: resquedb\norders · order_items · menu_items"]
+    end
+
+    REQ_POS_1 -->|"«satisfy»"| COMP_CART
+    REQ_POS_2 -->|"«satisfy»"| COMP_ORDER_CTRL
+    REQ_POS_3 -->|"«satisfy»"| COMP_SOCKET
+    REQ_POS_4 -->|"«satisfy»"| COMP_KITCHEN_UI
+    REQ_INV_1 -->|"«satisfy»"| COMP_MENU_CTRL
+    REQ_INV_2 -->|"«satisfy»"| COMP_MENU_CTRL
+
+    REQ_POS_1 -->|"«deriveReqt»"| REQ_POS_2
+    REQ_POS_2 -->|"«deriveReqt»"| REQ_POS_3
+    REQ_POS_4 -->|"«deriveReqt»"| REQ_POS_5
+    REQ_POS_5 -->|"«deriveReqt»"| REQ_POS_6
+    REQ_INV_1 -->|"«deriveReqt»"| REQ_INV_2
+    REQ_INV_1 -->|"«deriveReqt»"| REQ_INV_3
+    REQ_INV_3 -->|"«deriveReqt»"| REQ_INV_6
+    REQ_INV_4 -->|"«deriveReqt»"| REQ_INV_5
+
+    COMP_ORDER_CTRL -->|"«verify»"| REQ_POS_2
+    COMP_DB -->|"«verify»"| REQ_INV_1

@@ -1,0 +1,30 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'defaultLinkColor':'#000000' }}}%%
+gantt
+    title VikingsERP Illustrative Timeline: Customer Visit Lifecycle (18:00 - 19:35)
+    dateFormat HH:mm
+    axisFormat %H:%M
+
+    section Reservation Lifecycle
+    pending (Form Submitted)       :res1, 18:00, 15m
+    approved (Staff Triage)        :res2, after res1, 10m
+    queued (Waitlist Active)       :res3, after res2, 20m
+    called (Host Stand Alert)      :res4, after res3, 5m
+    seated (Table Occupied)        :res5, after res4, 45m
+
+    section Order Lifecycle
+    Menu Browsing & Cart           :ord1, 18:50, 10m
+    pending (Order Placed)         :ord2, after ord1, 2m
+    preparing (Kitchen Cooking)    :ord3, after ord2, 20m
+    ready (Plated for Service)     :ord4, after ord3, 5m
+    completed (Served & Consumed)  :ord5, after ord4, 8m
+
+    section Table M3 Physical State
+    available (Idle Floor)         :tbl1, 18:00, 50m
+    occupied (Party Dining)        :tbl2, after tbl1, 45m
+
+    section Real-Time Socket Signals
+    queue:update (Enqueued)        :sock1, 18:25, 1m
+    queue:update (Called Alert)    :sock2, 18:45, 1m
+    order:new (Kitchen Ticket)     :sock3, 19:02, 1m
+    order:update (Preparing)       :sock4, 19:04, 1m
+    order:update (Ready)           :sock5, 19:24, 1m

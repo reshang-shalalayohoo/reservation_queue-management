@@ -1,0 +1,68 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph LR
+    C["Customer"]
+    RS["Reservation Staff"]
+    KS["Service/Kitchen Staff"]
+    MG["Management"]
+
+    subgraph SystemBoundary["VikingsERP System Boundary"]
+        UC_AUTH(["Register / Login"])
+        
+        subgraph Mod1["Module 1: Reservation & Queue Management"]
+            UC1(["Create Reservation"])
+            UC2(["View My Reservations"])
+            UC3(["Track Queue Status"])
+            UC10(["Manage Reservations (Approve/Reject)"])
+            UC11(["Inspect Reservation Details"])
+            UC12(["Manage Queue (Call/Reposition)"])
+            UC13(["Manage Tables (Floor Inventory)"])
+            UC14(["Assign Seating & Free Tables"])
+        end
+
+        subgraph Mod2["Module 2: Digital Menu & Ordering"]
+            UC4(["Browse Digital Menu"])
+            UC5(["View Menu Item Details"])
+            UC6(["Manage Shopping Cart"])
+            UC7(["Submit & Confirm Order"])
+            UC8(["Track Order Status"])
+            UC15(["Manage Kitchen Orders"])
+            UC16(["Inspect Order Line Items"])
+            UC17(["Update Order Status (Prep/Ready/Complete)"])
+        end
+
+        subgraph ModMgmt["Executive Management Subsystem"]
+            UC18(["Monitor Operational Dashboard"])
+            UC19(["Manage Menu Catalog (CRUD)"])
+        end
+    end
+
+    C --- UC_AUTH
+    C --- UC1
+    C --- UC2
+    C --- UC3
+    C --- UC4
+    C --- UC5
+    C --- UC6
+    C --- UC7
+    C --- UC8
+
+    RS --- UC_AUTH
+    RS --- UC10
+    RS --- UC11
+    RS --- UC12
+    RS --- UC13
+    RS --- UC14
+    RS --- UC18
+
+    KS --- UC_AUTH
+    KS --- UC15
+    KS --- UC16
+    KS --- UC17
+
+    MG --- UC_AUTH
+    MG --- UC10
+    MG --- UC12
+    MG --- UC13
+    MG --- UC14
+    MG --- UC18
+    MG --- UC19

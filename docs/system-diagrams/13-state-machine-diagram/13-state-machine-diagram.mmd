@@ -1,0 +1,49 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'nodeBorder':'#000000' }}}%%
+stateDiagram-v2
+    state "Reservation Lifecycle" as ResLifecycle {
+        [*] --> Res_Pending : Customer Submits Booking Form
+        
+        Res_Pending --> Res_Approved : Staff Approves Request
+        Res_Pending --> Res_Cancelled : Customer / Staff Cancels Booking
+        
+        Res_Approved --> Res_Queued : Staff Enqueues Party (Queue Record Created)
+        Res_Approved --> Res_Cancelled : Customer Cancels Booking
+        
+        Res_Queued --> Res_Seated : Party Called & Assigned to Table
+        Res_Queued --> Res_NoShow : Customer Fails to Arrive
+        Res_Queued --> Res_Cancelled : Customer Leaves Waitlist
+        
+        Res_Seated --> Res_Completed : Customer Departs / Seating Finished
+        
+        Res_Completed --> [*]
+        Res_Cancelled --> [*]
+        Res_NoShow --> [*]
+    }
+
+    state "Queue Waitlist Lifecycle" as QueueLifecycle {
+        [*] --> Q_Waiting : Reservation Transitions to Queued
+        Q_Waiting --> Q_Waiting : Staff Adjusts Priority Position (moveUp / moveDown)
+        Q_Waiting --> Q_Called : Table Becomes Available (Staff Calls Party)
+        Q_Called --> Q_Seated : Party Acknowledges & Occupies Dining Table
+        Q_Called --> Q_NoShow : Call Timeout Expired
+        Q_Waiting --> Q_Cancelled : Booking Cancelled
+        
+        Q_Seated --> [*]
+        Q_NoShow --> [*]
+        Q_Cancelled --> [*]
+    }
+
+    state "Order Fulfillment Lifecycle" as OrderLifecycle {
+        [*] --> Ord_Pending : Customer Submits Order (/order-confirmation)
+        
+        Ord_Pending --> Ord_Preparing : Kitchen Staff Accepts Ticket (Start Cook)
+        Ord_Pending --> Ord_Cancelled : Staff / Customer Cancels Order
+        
+        Ord_Preparing --> Ord_Ready : Kitchen Staff Concludes Cooking
+        Ord_Preparing --> Ord_Cancelled : Kitchen Cancels (Out of Ingredients)
+        
+        Ord_Ready --> Ord_Completed : Waitstaff Delivers Dish to Table
+        
+        Ord_Completed --> [*]
+        Ord_Cancelled --> [*]
+    }

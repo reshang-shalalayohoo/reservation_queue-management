@@ -1,0 +1,43 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'clusterBkg':'#ffffff', 'clusterBorder':'#000000', 'defaultLinkColor':'#000000', 'nodeBorder':'#000000' }}}%%
+graph TB
+    subgraph OrderProcessing["Component: OrderProcessingSystem"]
+        direction TB
+
+        subgraph FrontendPort["Frontend Subsystem"]
+            DM["DigitalMenu (Catalog Browser)"]
+            MID["MenuItemDetails (Item Inspector)"]
+            CART["Cart (Item Aggregator)"]
+            OC["OrderConfirmation (Submission View)"]
+            OS["OrderStatus (Progress Monitor)"]
+        end
+
+        subgraph InternalStatePort["Internal State Management"]
+            CC["CartContext\n- items: OrderItem[]\n- total: Decimal\n- addItem() · updateQuantity()"]
+            SC["SocketContext\n- socket: Socket\n- listeners: order:update"]
+        end
+
+        subgraph BackendPort["Backend Route Controllers"]
+            MENU_CTRL["menu.js Controller\nGET /api/menu"]
+            ORDER_CTRL["orders.js Controller\nPOST /api/orders · PUT /api/orders/:id/status"]
+            SOCK_DISP["Socket.IO Broker\nemit(order:new) · emit(order:update)"]
+        end
+
+        subgraph StoragePort["Database Relational Store"]
+            MI_TAB[("menu_items table")]
+            O_TAB[("orders table")]
+            OI_TAB[("order_items table")]
+        end
+
+        DM -->|"Query Catalog"| MENU_CTRL
+        MENU_CTRL -->|"Read Records"| MI_TAB
+        MID -->|"Dispatch Selection"| CC
+        CART -->|"Mutate Quantities"| CC
+        CC -->|"Hydrate Submission"| OC
+        OC -->|"POST /api/orders"| ORDER_CTRL
+        ORDER_CTRL -->|"Validate Prices"| MI_TAB
+        ORDER_CTRL -->|"Insert Order Header"| O_TAB
+        ORDER_CTRL -->|"Insert Line Items"| OI_TAB
+        ORDER_CTRL -->|"Dispatch Signal"| SOCK_DISP
+        SOCK_DISP -->|"WebSocket Push"| OS
+        OS -->|"Handle Event"| SC
+    end
