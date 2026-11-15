@@ -73,6 +73,11 @@ export default function Navbar() {
     return role.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   };
 
+  const getPosReturnUrl = () => {
+    if (user?.role === 'customer') return 'http://localhost:5173/customer';
+    return 'http://localhost:5173/pos/orders';
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-inner">
@@ -114,9 +119,28 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
+
+          {/* Quick link in mobile menu */}
+          <a
+            href={getPosReturnUrl()}
+            className="nav-link"
+            style={{ color: '#ef4444', fontWeight: 'bold' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            ← Back to POS & Billing
+          </a>
         </div>
 
         <div className="nav-user">
+          {/* Prominent Back to POS & Billing button */}
+          <a
+            href={getPosReturnUrl()}
+            className="btn-pos-return"
+            title="Return to Vikings POS & Billing Module"
+          >
+            ← POS & Billing
+          </a>
+
           <div className="nav-user-info">
             <div className="nav-user-name">{user.name}</div>
             <div className="nav-user-role">{formatRole(user.role)}</div>
