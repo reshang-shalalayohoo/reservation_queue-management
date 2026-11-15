@@ -14,7 +14,8 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    window.location.href = 'http://localhost:5173/login?redirect=reservation';
+    return null;
   }
 
   if (roles && !roles.includes(user.role)) {

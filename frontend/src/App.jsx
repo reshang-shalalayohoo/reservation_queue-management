@@ -1,11 +1,8 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
-
-// Auth pages
-import Login from './pages/Login';
-import Register from './pages/Register';
 
 // Customer pages
 import Reservation from './pages/customer/Reservation';
@@ -44,9 +41,26 @@ function App() {
     );
   }
 
+  /** Redirect to central VikingsERP unified login gateway */
+  function CentralLoginRedirect() {
+    useEffect(() => {
+      window.location.href = 'http://localhost:5173/login?redirect=reservation';
+    }, []);
+
+    return (
+      <div className="loading-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="spinner"></div>
+        <p className="loading-text">Redirecting to VikingsERP Central Unified Login...</p>
+      </div>
+    );
+  }
+
   // Determine default redirect based on role
   const getDefaultRoute = () => {
-    if (!user) return '/login';
+    if (!user) {
+      window.location.href = 'http://localhost:5173/login?redirect=reservation';
+      return '/login';
+    }
     switch (user.role) {
       case 'customer': return '/menu';
       case 'reservation_staff': return '/staff/reservations';
@@ -64,9 +78,9 @@ function App() {
       {user && <Navbar />}
       <main className={user ? 'main-content' : ''}>
         <Routes>
-          {/* Auth */}
-          <Route path="/login" element={!user ? <Login /> : <Navigate to={getDefaultRoute()} />} />
-          <Route path="/register" element={!user ? <Register /> : <Navigate to={getDefaultRoute()} />} />
+          {/* Centralized Auth Redirects */}
+          <Route path="/login" element={<CentralLoginRedirect />} />
+          <Route path="/register" element={<CentralLoginRedirect />} />
 
           {/* Customer */}
           <Route path="/reservation" element={

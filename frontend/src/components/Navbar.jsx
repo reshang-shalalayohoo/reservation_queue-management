@@ -66,7 +66,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    window.location.href = 'http://localhost:5173/login';
   };
 
   const formatRole = (role) => {
@@ -117,6 +117,17 @@ export default function Navbar() {
         </div>
 
         <div className="nav-user">
+          {/* Prominent Back to Vikings ERP button - Management / Owner / Manager */}
+          {(user.role === 'management' || user.role === 'Owner' || user.role === 'Manager') && (
+            <a
+              href="http://localhost:5173/dashboard"
+              className="btn-pos-return"
+              title="Return to Vikings Main Dashboard"
+            >
+              ← Vikings ERP
+            </a>
+          )}
+
           {/* Prominent Back to POS & Billing button - Cashier role only */}
           {user.role === 'cashier' && (
             <a
