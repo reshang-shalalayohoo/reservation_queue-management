@@ -128,6 +128,17 @@ export default function Navbar() {
             </a>
           )}
 
+          {/* Prominent Back to Kitchen Inventory button - Kitchen role only */}
+          {user.role === 'kitchen_staff' && (
+            <a
+              href="http://localhost:5173/inventory/stock-levels"
+              className="btn-pos-return"
+              title="Return to Vikings Kitchen Inventory"
+            >
+              ← Kitchen Inventory
+            </a>
+          )}
+
           <div className="nav-user-info">
             <div className="nav-user-name">{user.name}</div>
             <div className="nav-user-role">{formatRole(user.role)}</div>
