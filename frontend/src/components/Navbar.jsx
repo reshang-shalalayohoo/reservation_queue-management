@@ -114,18 +114,6 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
-
-          {/* Quick link in mobile menu - Cashier role only */}
-          {user.role === 'cashier' && (
-            <a
-              href="http://localhost:5173/pos/orders"
-              className="nav-link"
-              style={{ color: '#ef4444', fontWeight: 'bold' }}
-              onClick={() => setMenuOpen(false)}
-            >
-              ← Back to POS & Billing
-            </a>
-          )}
         </div>
 
         <div className="nav-user">
