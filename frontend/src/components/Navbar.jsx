@@ -18,11 +18,33 @@ const navConfig = {
     { path: '/staff/tables', label: 'Tables' },
     { path: '/staff/seating', label: 'Seating' },
   ],
+  cashier: [
+    { path: '/staff/reservations', label: 'Reservations' },
+    { path: '/staff/queue', label: 'Queue' },
+    { path: '/staff/tables', label: 'Tables' },
+    { path: '/staff/seating', label: 'Seating' },
+  ],
   kitchen_staff: [
     { path: '/kitchen/orders', label: 'Orders' },
     { path: '/kitchen/order-status', label: 'Status Mgmt' },
   ],
   management: [
+    { path: '/management/dashboard', label: 'Dashboard' },
+    { path: '/staff/reservations', label: 'Reservations' },
+    { path: '/staff/queue', label: 'Queue' },
+    { path: '/staff/tables', label: 'Tables' },
+    { path: '/staff/seating', label: 'Seating' },
+    { path: '/kitchen/orders', label: 'Orders' },
+  ],
+  Owner: [
+    { path: '/management/dashboard', label: 'Dashboard' },
+    { path: '/staff/reservations', label: 'Reservations' },
+    { path: '/staff/queue', label: 'Queue' },
+    { path: '/staff/tables', label: 'Tables' },
+    { path: '/staff/seating', label: 'Seating' },
+    { path: '/kitchen/orders', label: 'Orders' },
+  ],
+  Manager: [
     { path: '/management/dashboard', label: 'Dashboard' },
     { path: '/staff/reservations', label: 'Reservations' },
     { path: '/staff/queue', label: 'Queue' },

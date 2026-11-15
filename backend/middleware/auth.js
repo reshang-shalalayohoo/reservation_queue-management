@@ -29,7 +29,13 @@ const authorize = (...roles) => {
       return res.status(401).json({ error: 'Not authenticated.' });
     }
 
-    if (!roles.includes(req.user.role)) {
+    const userRole = req.user.role;
+    const isAllowed =
+      roles.includes(userRole) ||
+      ['Owner', 'Manager', 'management'].includes(userRole) ||
+      (userRole === 'cashier' && (roles.includes('reservation_staff') || roles.includes('cashier')));
+
+    if (!isAllowed) {
       return res.status(403).json({ error: 'Access denied. Insufficient permissions.' });
     }
 

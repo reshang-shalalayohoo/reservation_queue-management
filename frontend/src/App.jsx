@@ -50,9 +50,12 @@ function App() {
     switch (user.role) {
       case 'customer': return '/menu';
       case 'reservation_staff': return '/staff/reservations';
+      case 'cashier': return '/staff/reservations';
       case 'kitchen_staff': return '/kitchen/orders';
       case 'management': return '/management/dashboard';
-      default: return '/login';
+      case 'Owner': return '/management/dashboard';
+      case 'Manager': return '/management/dashboard';
+      default: return '/staff/reservations';
     }
   };
 
@@ -91,21 +94,21 @@ function App() {
             <ProtectedRoute roles={['customer']}><OrderStatus /></ProtectedRoute>
           } />
 
-          {/* Reservation Staff */}
+          {/* Reservation Staff & Cashier / Management */}
           <Route path="/staff/reservations" element={
-            <ProtectedRoute roles={['reservation_staff', 'management']}><ReservationManagement /></ProtectedRoute>
+            <ProtectedRoute roles={['reservation_staff', 'management', 'cashier', 'Owner', 'Manager']}><ReservationManagement /></ProtectedRoute>
           } />
           <Route path="/staff/reservations/:id" element={
-            <ProtectedRoute roles={['reservation_staff', 'management']}><ReservationDetails /></ProtectedRoute>
+            <ProtectedRoute roles={['reservation_staff', 'management', 'cashier', 'Owner', 'Manager']}><ReservationDetails /></ProtectedRoute>
           } />
           <Route path="/staff/queue" element={
-            <ProtectedRoute roles={['reservation_staff', 'management']}><QueueManagement /></ProtectedRoute>
+            <ProtectedRoute roles={['reservation_staff', 'management', 'cashier', 'Owner', 'Manager']}><QueueManagement /></ProtectedRoute>
           } />
           <Route path="/staff/tables" element={
-            <ProtectedRoute roles={['reservation_staff', 'management']}><TableManagement /></ProtectedRoute>
+            <ProtectedRoute roles={['reservation_staff', 'management', 'cashier', 'Owner', 'Manager']}><TableManagement /></ProtectedRoute>
           } />
           <Route path="/staff/seating" element={
-            <ProtectedRoute roles={['reservation_staff', 'management']}><SeatingManagement /></ProtectedRoute>
+            <ProtectedRoute roles={['reservation_staff', 'management', 'cashier', 'Owner', 'Manager']}><SeatingManagement /></ProtectedRoute>
           } />
 
           {/* Kitchen Staff */}

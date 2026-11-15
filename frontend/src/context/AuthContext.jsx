@@ -4,8 +4,18 @@ import api from '../services/api';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  // SSO Token Extraction: Support seamless transfer from VikingsGrill-ERP
+  const queryParams = new URLSearchParams(window.location.search);
+  const ssoToken = queryParams.get('token') || queryParams.get('sso_token');
+
+  if (ssoToken) {
+    localStorage.setItem('token', ssoToken);
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(ssoToken || localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

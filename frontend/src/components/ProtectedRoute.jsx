@@ -22,8 +22,11 @@ export default function ProtectedRoute({ children, roles }) {
     const roleHome = {
       customer: '/menu',
       reservation_staff: '/staff/reservations',
+      cashier: '/staff/reservations',
       kitchen_staff: '/kitchen/orders',
       management: '/management/dashboard',
+      Owner: '/management/dashboard',
+      Manager: '/management/dashboard',
     };
     return <Navigate to={roleHome[user.role] || '/login'} replace />;
   }
